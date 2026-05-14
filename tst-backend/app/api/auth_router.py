@@ -1,8 +1,8 @@
 import os
 import firebase_admin
 from firebase_admin import credentials, auth
-from fastapi import APIRouter, HTTPException, Header
-from schemas.AuthSchemas import UserSingUpRequest
+from fastapi import APIRouter, Depends, HTTPException, Header
+from schemas.AuthSchemas import UserSignupRequest, SigninResponse
 
 router = APIRouter(
     prefix="/auth",
@@ -44,3 +44,23 @@ async def verify_user(id_token: str = Header(None)):
             status_code=401,
             detail="Token Invalido."
         )
+
+@router.post("/singup")
+async def signup(userSignup: UserSignupRequest, decoded_token = Depends(verify_user)):
+    # antes de rodar o escopo da função, o Depends é chamado e aguada-se a autorização
+    return {
+        "status": 200,
+        "user_info": SigninResponse(
+            first_name=userSignup.first_name,
+            last_name=userSignup.last_name,
+            email=userSignup.email,
+            role=userSignup.role,
+            uid=decoded_token.get("uid")
+        )
+    }
+
+@router.get("/")
+def hello_world():
+    return {
+        "message": "hello, world"
+    }
