@@ -12,9 +12,6 @@ if not env_value:
 
 firebase_credentials_path = os.path.expanduser(env_value)
 
-# Define path do arquivo de configuração do SDK Firebase
-FIREBASE_CREDENTIALS = "/home/guilherme/Documentos/estudos/cc/projetos/tst_eda_remake/settings/tst-eda-remake-demo-firebase-adminsdk-fbsvc-d92549ae5b.json"
-
 # Valida as configurações do SDK
 cred = credentials.Certificate(firebase_credentials_path)
 # Initializa serviçõs do firebase_admin

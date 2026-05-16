@@ -1,12 +1,10 @@
 from fastapi import FastAPI, Depends
-# from api import auth_router
-
-from core.security import verify_token
+from api import auth_router
 
 app = FastAPI()
 
 # adicionando as rotas do diretorio api
-# app.include_router(auth_router.router)
+app.include_router(auth_router.router)
 
 @app.get("/")
 def hello_world():
