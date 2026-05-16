@@ -1,5 +1,7 @@
-from fastapi import FastAPI
-from api import auth_router
+from fastapi import FastAPI, Depends
+# from api import auth_router
+
+from core.security import verify_token
 
 app = FastAPI()
 
@@ -13,4 +15,3 @@ def hello_world():
         "status": 200,
         "response": "ola mundo"
     }
-
