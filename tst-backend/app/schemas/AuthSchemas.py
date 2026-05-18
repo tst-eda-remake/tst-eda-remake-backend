@@ -5,8 +5,8 @@ class UserSignupRequest(BaseModel):
     password: str
     first_name: str
     last_name: str 
-    initialPeriod: str
-    is_currentChair: bool
+    initial_semester: str
+    is_taking_course: bool
     role: str
 
 class SigninResponse(BaseModel):

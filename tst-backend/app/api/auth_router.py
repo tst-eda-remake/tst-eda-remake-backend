@@ -1,4 +1,4 @@
-from services.auth_services import verify_user
+from services.auth_service import verify_token
 from fastapi import status, APIRouter, Depends
 from schemas.AuthSchemas import UserSignupRequest, SigninResponse
 
@@ -14,7 +14,7 @@ router = APIRouter(
     summary="Cadastra um novo usuário",
     description="Cria o registro do usuário no banco de dados interno após a validação do token Firebase."
 )
-async def signup(userSignup: UserSignupRequest, decoded_token = Depends(verify_user)):
+async def signup(userSignup: UserSignupRequest, decoded_token = Depends(verify_token)):
     """
     Realiza o cadastro do usuário no sistema.
 

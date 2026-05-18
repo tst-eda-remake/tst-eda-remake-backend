@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from api import auth_router
 
 app = FastAPI()
@@ -13,4 +13,3 @@ def hello_world():
         "status": 200,
         "response": "ola mundo"
     }
-
