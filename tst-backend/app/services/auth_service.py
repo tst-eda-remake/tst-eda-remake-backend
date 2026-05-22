@@ -3,7 +3,7 @@ import firebase_admin
 from firebase_admin import auth, credentials
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from app.core.settings import settings
+from core.settings import settings
 
 firebase_credentials_path = os.path.expanduser(settings.PATH_FIREBASE_CREDENTIALS)
 
