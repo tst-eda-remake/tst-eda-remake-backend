@@ -1,16 +1,11 @@
-import os
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
-
-DATABASE_URL = os.getenv("DATABASE_URL") 
-
-if not DATABASE_URL:
-    print("url nao informada, ERRO")
-    exit()
+from app.core.settings import settings
 
 # gerenciador de conexão: cuida do login e mantem o canal fisico aberto 
 engine = create_engine(
-    DATABASE_URL, # type: ignore
+    settings.DATABASE_URL, # type: ignore
     connect_args={
         "options": '-c search_path="tst-eda-remake-db"'
     }

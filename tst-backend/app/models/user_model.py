@@ -9,7 +9,6 @@ class User(Base):
     id: Mapped[str] = mapped_column(
         String(28), # tamanho maximo da String
         primary_key=True, 
-        nullable=False,
         index=True  # Adiciona um índice para buscas ultra rápidas
     )
 

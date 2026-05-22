@@ -1,6 +1,6 @@
 from .config.database_config import Base
 from sqlalchemy import String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 class Question(Base):
     __tablename__ = "questions"
@@ -39,6 +39,11 @@ class Question(Base):
     resolution_path: Mapped[str] = mapped_column(
         String(256),
         nullable=False
+    )
+
+    test_cases: Mapped[list["Test"]] = relationship(
+        back_populates="question",
+        cascade="all, delete-orphan"
     )
 
 

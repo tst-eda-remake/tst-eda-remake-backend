@@ -1,6 +1,6 @@
 from services.auth_service import verify_token
 from fastapi import status, APIRouter, Depends
-from schemas.AuthSchemas import UserSignupRequest, SigninResponse
+from schemas.auth_schemas import UserSignupRequest, SigninResponse
 
 router = APIRouter(
     prefix="/auth",
