@@ -5,7 +5,7 @@ class UserSignupRequest(BaseModel):
     first_name: str
     last_name: str 
     initial_semester: str
-    is_taking_course: bool
+    course_semester: None | str
     role: str
 
 class SigninResponse(BaseModel):
