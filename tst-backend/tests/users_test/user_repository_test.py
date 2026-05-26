@@ -71,66 +71,61 @@ def set_up_users_examples() -> dict[str, User]:
         "user": user,
         "same_user_id": user_with_same_id,
         "same_user_email": user_with_same_email
-
     }
 
 def test_insert_user(set_up_test_db, set_up_users_examples):
     result = set_up_test_db.insert_user(set_up_users_examples["user"])
-
     assert result is True
 
 def test_insert_user_same_id(set_up_test_db, set_up_users_examples):
     result = set_up_test_db.insert_user(set_up_users_examples["user"])
-
     assert result is True
 
     result_duplicated = set_up_test_db.insert_user(set_up_users_examples["same_user_id"])
-
     assert result_duplicated is False
 
 def test_insert_user_same_email(set_up_test_db, set_up_users_examples):
     result = set_up_test_db.insert_user(set_up_users_examples["user"])
-
     assert result is True
 
     result_duplicated = set_up_test_db.insert_user(set_up_users_examples["same_user_email"])
-
     assert result_duplicated is False
 
 def test_get_user_after_insert(set_up_test_db, set_up_users_examples):
+    user_id = set_up_users_examples["user"].id
+    
     result = set_up_test_db.insert_user(set_up_users_examples["user"])
-
     assert result is True
 
-    user_fetch = set_up_test_db.get_user_by_uid(set_up_users_examples["user"].id)
+    user_fetch = set_up_test_db.get_user_by_uid(user_id)
 
-    assert user_fetch.id == set_up_users_examples["user"].id
-    assert user_fetch.email == set_up_users_examples["user"].email
+    assert user_fetch is not None
+    assert user_fetch.id == user_id
 
 def test_get_user_without_insert(set_up_test_db, set_up_users_examples):
-    result = set_up_test_db.get_user_by_uid(set_up_users_examples["user"].id)
-
+    user_id = set_up_users_examples["user"].id
+    result = set_up_test_db.get_user_by_uid(user_id)
     assert result is None
 
 def test_data_persistence_user(set_up_test_db, set_up_users_examples):
-    result = set_up_test_db.insert_user(set_up_users_examples["user"])
+    orig_id = set_up_users_examples["user"].id
+    orig_email = set_up_users_examples["user"].email
+    orig_first_name = set_up_users_examples["user"].first_name
+    orig_last_name = set_up_users_examples["user"].last_name
+    orig_course_sem = set_up_users_examples["user"].course_semester
+    orig_init_sem = set_up_users_examples["user"].initial_semester
+    orig_role = set_up_users_examples["user"].role
 
+    result = set_up_test_db.insert_user(set_up_users_examples["user"])
     assert result is True
 
-    user_fetch = set_up_test_db.get_user_by_uid(set_up_users_examples["user"].id)
+    user_fetch = set_up_test_db.get_user_by_uid(orig_id)
 
-    assert user_fetch.id == set_up_users_examples["user"].id
-    assert user_fetch.email == set_up_users_examples["user"].email
-    assert user_fetch.first_name == set_up_users_examples["user"].first_name
-    assert user_fetch.last_name == set_up_users_examples["user"].last_name
-    assert user_fetch.course_semester == set_up_users_examples["user"].course_semester 
-    assert user_fetch.initial_semester == set_up_users_examples["user"].initial_semester 
-    assert user_fetch.role == set_up_users_examples["user"].role 
-
-
-
-
-
-
-
-
+    assert user_fetch is not None
+    assert user_fetch.id == orig_id
+    assert user_fetch.email == orig_email
+    assert user_fetch.first_name == orig_first_name
+    assert user_fetch.last_name == orig_last_name
+    assert user_fetch.course_semester == orig_course_sem
+    assert user_fetch.initial_semester == orig_init_sem
+    assert user_fetch.role == orig_role
