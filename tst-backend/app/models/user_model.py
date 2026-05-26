@@ -44,8 +44,8 @@ class User(Base):
     )
 
     __table_args__ = (
-        CheckConstraint('char_length(id) = 28', name='check_firebase_uid_length'),
-        CheckConstraint('char_length(initial_semester) = 6', name='check_semester_format')
+        CheckConstraint('length(id) = 28', name='check_firebase_uid_length'),
+        CheckConstraint('length(initial_semester) = 6', name='check_semester_format')
     )
 
     def __init__(self, user_singup: UserSignupRequest, token_data: TokenProviderData):
