@@ -1,5 +1,6 @@
-from typing import Optional
+from typing import Optional, final
 
+from sqlalchemy import delete
 from sqlalchemy.exc import IntegrityError
 
 from app.models.config.database_config import session_local
@@ -35,6 +36,24 @@ class UserRepository:
         except Exception:
             self.db.rollback()
             return False
+        finally:
+            self.db.close()
+        
+    def delete_user(self, uid: str):
+        try:
+            lines = self.db.query(User).filter(User.id == uid).delete(
+                synchronize_session="evaluate"
+            )
+
+            self.db.commit()
+
+            return lines > 0
+        except Exception:
+            self.db.rollback()
+            return False
+        finally:
+            self.db.close()
+
 
 
          
