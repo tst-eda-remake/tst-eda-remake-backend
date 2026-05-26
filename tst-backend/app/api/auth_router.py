@@ -1,8 +1,8 @@
-from services.auth_service import verify_token
-from services.user_service import singup_user
+from app.services.auth_service import verify_token
+from app.services.user_service import singup_user
 from fastapi import status, APIRouter, Depends
-from schemas.auth_schemas import UserSignupRequest, TokenProviderData
-from schemas.user_schema import UserResponse
+from app.schemas.auth_schemas import UserSignupRequest, TokenProviderData
+from app.schemas.user_schema import UserResponse
 
 router = APIRouter(
     prefix="/auth",

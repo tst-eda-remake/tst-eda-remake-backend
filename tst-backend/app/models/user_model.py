@@ -1,7 +1,7 @@
 from sqlalchemy import String, CheckConstraint
 from sqlalchemy.orm import Mapped, mapped_column
-from schemas.auth_schemas import UserSignupRequest, TokenProviderData
-from .config.database_config import Base
+from app.schemas.auth_schemas import UserSignupRequest, TokenProviderData
+from app.models.config.database_config import Base
 
 class User(Base):
     __tablename__ = "users"

@@ -3,8 +3,9 @@ import firebase_admin
 from firebase_admin import auth, credentials
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from core.settings import settings
-from schemas.auth_schemas import TokenProviderData
+from app.core.settings import settings
+from app.schemas.auth_schemas import TokenProviderData
+
 firebase_credentials_path = os.path.expanduser(settings.PATH_FIREBASE_CREDENTIALS)
 
 # Valida as configurações do SDK

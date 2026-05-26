@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status
-from schemas.user_schema import UserResponse
-from services.auth_service import verify_token
-from services.user_service import get_user_information
+from app.schemas.user_schema import UserResponse
+from app.services.auth_service import verify_token
+from app.services.user_service import get_user_information
 
 router = APIRouter(
     prefix="/user",

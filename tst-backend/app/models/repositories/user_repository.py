@@ -2,9 +2,9 @@ from typing import Optional
 
 from sqlalchemy.exc import IntegrityError
 
-from ..config.database_config import session_local
+from app.models.config.database_config import session_local
 from sqlalchemy.orm import Session
-from models.user_model import User
+from app.models.user_model import User
 
 class UserRepository:
     

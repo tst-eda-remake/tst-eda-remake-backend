@@ -1,8 +1,8 @@
-from schemas.auth_schemas import TokenProviderData, UserSignupRequest
-from schemas.user_schema import UserResponse
-from exceptions.user_exceptions import UserNotFoundException
-from models.user_model import User
-from models.repositories.user_repository import UserRepository
+from app.schemas.auth_schemas import TokenProviderData, UserSignupRequest
+from app.schemas.user_schema import UserResponse
+from app.exceptions.user_exceptions import UserNotFoundException
+from app.models.user_model import User
+from app.models.repositories.user_repository import UserRepository
 
 user_repository = UserRepository()
 

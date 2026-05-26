@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
-from core.settings import settings
+from app.core.settings import settings
 
 # gerenciador de conexão: cuida do login e mantem o canal fisico aberto 
 engine = create_engine(

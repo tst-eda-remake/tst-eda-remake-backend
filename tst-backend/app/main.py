@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Depends
-from api import auth_router
-from api import user_router 
+from app.api import auth_router
+from app.api import user_router 
 
 app = FastAPI()
 
