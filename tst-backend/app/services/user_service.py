@@ -6,11 +6,11 @@ from app.models.repositories.user_repository import UserRepository
 
 user_repository = UserRepository()
 
-def get_user_information(token_data: TokenProviderData):
-    user = user_repository.get_user_by_uid(token_data.uid)
+def get_user_information(uid: str):
+    user = user_repository.get_user_by_uid(uid)
 
     if not user:
-        raise UserNotFoundException(identifier=token_data.uid)
+        raise UserNotFoundException(identifier=uid)
     
     return UserResponse.model_validate(user)
 
@@ -21,3 +21,22 @@ def singup_user(token_data: TokenProviderData, user_info: UserSignupRequest):
         return False # chage for an exception
     
     return UserResponse.model_validate(user)
+
+def update_user(uid: str, user_info: UserSignupRequest):
+    """
+    Função que realiza a sobrescrição de informações que o User possa alterar.
+    """
+
+    user = user_repository.get_user_by_uid(uid)
+
+    if not user: 
+        raise UserNotFoundException(identifier=uid)
+    
+    user.set_personal_information(user_info)
+
+    if not user_repository.save_changes():
+        return None # Lançar uma excessão posteriormente
+
+    return UserResponse.model_validate(user)
+
+    

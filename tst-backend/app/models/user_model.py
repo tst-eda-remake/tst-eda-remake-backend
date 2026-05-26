@@ -56,3 +56,9 @@ class User(Base):
         self.initial_semester = user_singup.initial_semester
         self.course_semester = user_singup.course_semester
         self.role = token_data.role
+
+    def set_personal_information(self, user_sinup_info: UserSignupRequest):
+        self.first_name = user_sinup_info.first_name
+        self.last_name = user_sinup_info.last_name
+        self.initial_semester = user_sinup_info.initial_semester
+        self.course_semester = user_sinup_info.course_semester

@@ -25,5 +25,17 @@ class UserRepository:
         except IntegrityError:
             self.db.rollback()
             return False
+        finally:
+            self.db.close()
+            
+    def save_changes(self):
+        try:
+            self.db.commit()
+            return True
+        except Exception:
+            self.db.rollback()
+            return False
+
+
          
         
