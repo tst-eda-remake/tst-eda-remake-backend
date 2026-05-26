@@ -1,6 +1,6 @@
 from sqlalchemy import String, CheckConstraint
 from sqlalchemy.orm import Mapped, mapped_column
-from schemas.auth_schemas import UserSignupRequest
+from schemas.auth_schemas import UserSignupRequest, TokenProviderData
 from .config.database_config import Base
 
 class User(Base):
@@ -48,11 +48,11 @@ class User(Base):
         CheckConstraint('char_length(initial_semester) = 6', name='check_semester_format')
     )
 
-    def __init__(self, uid: str, userSingup: UserSignupRequest):
-        self.id = uid
-        self.email = userSingup.email
-        self.first_name = userSingup.first_name
-        self.last_name = userSingup.last_name
-        self.initial_semester = userSingup.initial_semester
-        self.course_semester = userSingup.course_semester
-        self.role = userSingup.role
+    def __init__(self, user_singup: UserSignupRequest, token_data: TokenProviderData):
+        self.id = token_data.uid
+        self.email = token_data.email
+        self.first_name = user_singup.first_name
+        self.last_name = user_singup.last_name
+        self.initial_semester = user_singup.initial_semester
+        self.course_semester = user_singup.course_semester
+        self.role = token_data.role

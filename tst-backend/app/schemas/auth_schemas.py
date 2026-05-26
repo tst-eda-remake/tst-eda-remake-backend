@@ -2,20 +2,10 @@ from pydantic import BaseModel, EmailStr, Field
 from typing import List
 
 class UserSignupRequest(BaseModel):
-    email: str
     first_name: str
     last_name: str 
     initial_semester: str
     course_semester: None | str
-    role: str
-
-class SigninResponse(BaseModel):
-    first_name: str
-    last_name: str
-    email: str  
-    uid: str
-    role: str
-
 
 class TokenProviderData(BaseModel):
     """
@@ -24,4 +14,4 @@ class TokenProviderData(BaseModel):
     """
     uid: str = Field(alias="sub")
     email: EmailStr
-    roles: List[str] = Field(default=[])
+    role: str = Field(default="")

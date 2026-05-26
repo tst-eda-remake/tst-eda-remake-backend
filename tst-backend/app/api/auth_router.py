@@ -1,6 +1,8 @@
 from services.auth_service import verify_token
+from services.user_service import singup_user
 from fastapi import status, APIRouter, Depends
-from schemas.auth_schemas import UserSignupRequest, SigninResponse
+from schemas.auth_schemas import UserSignupRequest, TokenProviderData
+from schemas.user_schema import UserResponse
 
 router = APIRouter(
     prefix="/auth",
@@ -9,12 +11,12 @@ router = APIRouter(
 
 @router.post(
     "/signup",
-    response_model=SigninResponse,
+    response_model=UserResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Cadastra um novo usuário",
     description="Cria o registro do usuário no banco de dados interno após a validação do token Firebase."
 )
-async def signup(userSignup: UserSignupRequest, decoded_token = Depends(verify_token)):
+async def signup(user_signup: UserSignupRequest, decoded_token: TokenProviderData = Depends(verify_token)):
     """
     Realiza o cadastro do usuário no sistema.
 
@@ -30,18 +32,8 @@ async def signup(userSignup: UserSignupRequest, decoded_token = Depends(verify_t
         HTTPException (403): Caso o token seja válido, mas o e-mail não tenha sido verificado.
         HTTPExecption (409): Se o usuário ja apresentar cadastro.
     """
-    # antes de rodar o escopo da função, o Depends é chamado e aguada-se a autorização
-
-    # aqui chamaria a logica interna no services para o cadastro do aluno no DB
-
-    # Retorno caso não suba escessão.
+    
     return {
         "status": 201,
-        "user_info": SigninResponse(
-            first_name=userSignup.first_name,
-            last_name=userSignup.last_name,
-            email=userSignup.email,
-            role=userSignup.role,
-            uid=decoded_token.get("uid")
-        )
+        "user_info": singup_user(user_info=user_signup, token_data=decoded_token)
     }
