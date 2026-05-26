@@ -34,7 +34,7 @@ class User(Base):
         nullable=False
     )
 
-    course_semester: Mapped[str] = mapped_column(
+    course_semester: Mapped[str| None] = mapped_column(
         String(6)
     )
 
@@ -54,5 +54,5 @@ class User(Base):
         self.first_name = userSingup.first_name
         self.last_name = userSingup.last_name
         self.initial_semester = userSingup.initial_semester
-        self.is_taking_curse = userSingup.is_taking_course
+        self.course_semester = userSingup.course_semester
         self.role = userSingup.role
