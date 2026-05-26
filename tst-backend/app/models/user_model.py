@@ -34,8 +34,8 @@ class User(Base):
         nullable=False
     )
 
-    is_taking_curse: Mapped[bool] = mapped_column(
-        nullable=False
+    course_semester: Mapped[str] = mapped_column(
+        String(6)
     )
 
     role: Mapped[str] = mapped_column(
