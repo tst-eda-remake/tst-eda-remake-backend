@@ -2,7 +2,7 @@ from unicodedata import category
 
 from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from .config.database_config import Base
+from app.models.config.database_config import Base
 
 from question_model import Question
 

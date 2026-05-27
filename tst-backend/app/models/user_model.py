@@ -1,7 +1,7 @@
 from sqlalchemy import String, CheckConstraint
 from sqlalchemy.orm import Mapped, mapped_column
-from schemas.auth_schemas import UserSignupRequest
-from .config.database_config import Base
+from app.schemas.auth_schemas import UserSignupRequest, TokenProviderData
+from app.models.config.database_config import Base
 
 class User(Base):
     __tablename__ = "users"
@@ -34,8 +34,8 @@ class User(Base):
         nullable=False
     )
 
-    is_taking_curse: Mapped[bool] = mapped_column(
-        nullable=False
+    course_semester: Mapped[str| None] = mapped_column(
+        String(6)
     )
 
     role: Mapped[str] = mapped_column(
@@ -44,15 +44,21 @@ class User(Base):
     )
 
     __table_args__ = (
-        CheckConstraint('char_length(id) = 28', name='check_firebase_uid_length'),
-        CheckConstraint('char_length(initial_semester) = 6', name='check_semester_format')
+        CheckConstraint('length(id) = 28', name='check_firebase_uid_length'),
+        CheckConstraint('length(initial_semester) = 6', name='check_semester_format')
     )
 
-    def __init__(self, uid: str, userSingup: UserSignupRequest):
-        self.id = uid
-        self.email = userSingup.email
-        self.first_name = userSingup.first_name
-        self.last_name = userSingup.last_name
-        self.initial_semester = userSingup.initial_semester
-        self.is_taking_curse = userSingup.is_taking_course
-        self.role = userSingup.role
+    def __init__(self, user_singup: UserSignupRequest, token_data: TokenProviderData):
+        self.id = token_data.uid
+        self.email = token_data.email
+        self.first_name = user_singup.first_name
+        self.last_name = user_singup.last_name
+        self.initial_semester = user_singup.initial_semester
+        self.course_semester = user_singup.course_semester
+        self.role = token_data.role
+
+    def set_personal_information(self, user_sinup_info: UserSignupRequest):
+        self.first_name = user_sinup_info.first_name
+        self.last_name = user_sinup_info.last_name
+        self.initial_semester = user_sinup_info.initial_semester
+        self.course_semester = user_sinup_info.course_semester
