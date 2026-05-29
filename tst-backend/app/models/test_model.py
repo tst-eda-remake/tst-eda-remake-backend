@@ -3,8 +3,7 @@ from unicodedata import category
 from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.config.database_config import Base
-
-from question_model import Question
+from app.models.question_model import Question
 
 class Test(Base):
     __tablename__ = "tests"
