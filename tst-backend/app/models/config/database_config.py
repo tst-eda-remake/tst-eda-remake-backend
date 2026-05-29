@@ -20,3 +20,12 @@ session_local = sessionmaker(
 
 class Base(DeclarativeBase):
     pass
+
+def init_db():
+    from app.models.user_model import User
+    from app.models.question_model import Question 
+    from app.models.test_model import Test
+
+    print("🔨 Criando tabelas no banco de dados...")
+    Base.metadata.create_all(bind=engine)
+    print("✅ Todas as tabelas foram estruturadas com sucesso!")

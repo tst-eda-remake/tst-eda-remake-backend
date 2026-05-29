@@ -29,9 +29,16 @@ class UserRepository:
         finally:
             self.db.close()
             
-    def save_changes(self):
+    def save_changes(self, user=None):
         try:
+            if user:
+                self.db.add(user)
+
             self.db.commit()
+            
+            if user:
+                self.db.refresh(user)
+                
             return True
         except Exception:
             self.db.rollback()
