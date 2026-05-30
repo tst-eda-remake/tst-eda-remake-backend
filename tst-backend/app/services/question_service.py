@@ -1,4 +1,4 @@
-from app.schemas.questio_schema import QuestionCreate, QuestionResponse, QuestionUpdate
+from app.schemas.question_schema import QuestionCreate, QuestionResponse, QuestionUpdate
 from app.exceptions.question_exceptions import QuestionNotFoundException
 from app.models.question_model import Question
 from app.models.repositories.question_repository import QuestionRepository
