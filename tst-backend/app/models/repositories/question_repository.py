@@ -14,7 +14,7 @@ class QuestionRepository:
 
     def get_question_by_id(self, id: int) -> Optional[Question]:
         return self.db.query(
-                Question
+            Question
         ).filter(Question.id == id).first()
 
     def insert_question(self, question: Question):

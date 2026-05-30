@@ -28,7 +28,7 @@ def set_up_test_db():
 
     yield repository
 
-    db_test_session.close()
+    db_test_session.close() # já fecha a sessão do bd
     Base.metadata.drop_all(bind=test_engine)
 
 @pytest.fixture(scope="function")
