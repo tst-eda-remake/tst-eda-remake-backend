@@ -34,7 +34,7 @@ def update_user(uid: str, user_info: UserSignupRequest):
     
     user.set_personal_information(user_info)
 
-    if not user_repository.save_changes():
+    if not user_repository.save_changes(user):
         return None # Lançar uma excessão posteriormente
 
     return UserResponse.model_validate(user)
