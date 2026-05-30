@@ -4,6 +4,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.models.config.database_config import Base
 from app.models.question_model import Question
+from app.schemas.question_schema import QuestionCreate
 from app.models.repositories.question_repository import QuestionRepository
 
 TEST_DATABASE_URL = "sqlite:///:memory:"
@@ -33,27 +34,30 @@ def set_up_test_db():
 
 @pytest.fixture(scope="function")
 def set_up_question_examples() -> dict[str, Question]:
-    question = Question(
-        id=1,
+    question = Question(QuestionCreate(
         title="Two Sum",
         description="Encontre dois números cuja soma seja igual ao alvo.",
         restriction="1 <= n <= 10^5",
         input_format="Lista de inteiros",
         output_format="Índices dos elementos",
         resolution_path="/solutions/two_sum.py"
-    )
+    ))
+    
+    # guinoronhaf: setando id aqui porque o model Question não recebe o id no construtor, já que o bd incrementa isso
+    question.id = 1
 
-    question_same_id = Question(
-        id=1,
+    question_same_id = Question(QuestionCreate(
         title="Binary Search",
         description="Busca binária.",
         restriction="Lista ordenada",
         input_format="Lista + valor",
         output_format="Posição",
         resolution_path="/solutions/binary_search.py"
-    )
+    ))
 
-    question_same_title = Question(
+    question_same_id.id = 1
+
+    question_same_title = Question(QuestionCreate(
         id=2,
         title="Two Sum",
         description="Outra descrição",
@@ -61,7 +65,9 @@ def set_up_question_examples() -> dict[str, Question]:
         input_format="Entrada qualquer",
         output_format="Saída qualquer",
         resolution_path="/solutions/other.py"
-    )
+    ))
+
+    question_same_title.id = 2
 
     return {
         "question": question,
