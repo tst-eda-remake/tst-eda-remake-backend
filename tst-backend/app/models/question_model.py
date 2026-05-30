@@ -40,10 +40,9 @@ class Question(Base):
         String(256),
         nullable=False
     )
-
-    test_cases: Mapped[list["Test"]] = relationship(
-        back_populates="question",
-        cascade="all, delete-orphan"
-    )
-
-
+    
+    # --- guinoronhaf: comentado porque é uma questão a ser implementada posteriormente ---
+    # test_cases: Mapped[list["Test"]] = relationship(
+    #     back_populates="question",
+    #     cascade="all, delete-orphan"
+    # )
