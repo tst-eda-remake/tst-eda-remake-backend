@@ -26,8 +26,6 @@ class QuestionRepository:
         except IntegrityError:
             self.db.rollback()
             return False
-        finally:
-            self.db.close()
 
     def save_changes(self):
         try:
@@ -36,8 +34,6 @@ class QuestionRepository:
         except:
             self.db.rollback()
             return False
-        finally:
-            self.db.close()
 
     def delete_question(self, id: int):
         try:
@@ -51,5 +47,3 @@ class QuestionRepository:
         except Exception:
             self.db.rollback()
             return False
-        finally:
-            self.db.close()
