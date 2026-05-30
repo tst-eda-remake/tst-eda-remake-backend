@@ -1,6 +1,7 @@
 from app.models.config.database_config import Base
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from app.schemas.question_schema import QuestionCreate
 
 class Question(Base):
     __tablename__ = "questions"
@@ -46,3 +47,11 @@ class Question(Base):
     #     back_populates="question",
     #     cascade="all, delete-orphan"
     # )
+    
+    def __init__(self, question_create: QuestionCreate):
+        self.title = question_create.title
+        self.description = question_create.description
+        self.restriction = question_create.restriction
+        self.input_format = question_create.input_format
+        self.output_format = question_create.output_format
+        self.resolution_path = question_create.resolution_path
