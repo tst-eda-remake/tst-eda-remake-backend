@@ -1380,6 +1380,11 @@ dependencies = [
     { name = "sqlalchemy", extra = ["postgresql-psycopgbinary"] },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "email-validator", specifier = ">=2.3.0" },
@@ -1390,6 +1395,9 @@ requires-dist = [
     { name = "pytest", specifier = ">=9.0.3" },
     { name = "sqlalchemy", extras = ["postgresql-psycopgbinary"], specifier = ">=2.0.49" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=9.0.3" }]
 
 [[package]]
 name = "typer"

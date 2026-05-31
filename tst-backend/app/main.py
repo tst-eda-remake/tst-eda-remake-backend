@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends
 from app.api import auth_router
 from app.api import user_router 
+from app.api import question_router
 from contextlib import asynccontextmanager
 from app.models.config.database_config import init_db 
 
@@ -16,6 +17,7 @@ app = FastAPI(lifespan=lifespan)
 # adicionando as rotas do diretorio api
 app.include_router(auth_router.router)
 app.include_router(user_router.router)
+app.include_router(question_router.router)
 
 @app.get("/")
 def hello_world():
