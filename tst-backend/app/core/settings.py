@@ -1,8 +1,8 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
-    DATABASE_URL: str
-    PATH_FIREBASE_CREDENTIALS: str  # O Pydantic mapeia direto o nome correto do .env
+    DATABASE_URL: str = "sqlite:///:memory:"
+    PATH_FIREBASE_CREDENTIALS: str | None = None # O Pydantic mapeia direto o nome correto do .env
 
     model_config = SettingsConfigDict(
         env_file=".env",
