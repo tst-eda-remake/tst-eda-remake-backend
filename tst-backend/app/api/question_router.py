@@ -16,7 +16,7 @@ router = APIRouter(
     summary="Busca informações da questão."
 )
 async def get_question_information(id: int):
-    return service.get_question_informarion(id)
+    return service.get_question_information(id)
 
 
 @router.put(
