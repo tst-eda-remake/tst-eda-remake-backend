@@ -58,7 +58,6 @@ def set_up_question_examples() -> dict[str, Question]:
     question_same_id.id = 1
 
     question_same_title = Question(QuestionCreate(
-        id=2,
         title="Two Sum",
         description="Outra descrição",
         restriction=None,
