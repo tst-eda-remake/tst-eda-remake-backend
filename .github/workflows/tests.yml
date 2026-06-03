@@ -1,0 +1,22 @@
+name: Backend CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - run: uv sync --frozen
+        working-directory: tst-backend
+
+      - run: uv run pytest
+        working-directory: tst-backend
