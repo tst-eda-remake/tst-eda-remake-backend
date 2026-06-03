@@ -157,18 +157,23 @@ def test_update_user_save_changes_fail(mock_repo, real_user_signup_request):
 @patch('app.services.user_service.user_repository')
 def test_delete_user_by_id_success(mock_repo):
     mock_repo.delete_user.return_value = True
-    
-    result = service.delete_user_by_id("uid-para-deletar")
-    
-    mock_repo.delete_user.assert_called_once_with("uid-para-deletar")
-    assert result is True
+    try: 
+        result = service.delete_user_by_id("uid-para-deletar")
+        
+        mock_repo.delete_user.assert_called_once_with("uid-para-deletar")
+        assert True
+    except UserNotFoundException: 
+        assert False # isso indica que lançou uma excessão e não deveria
 
 
 @patch('app.services.user_service.user_repository')
 def test_delete_user_by_id_not_found(mock_repo):
     mock_repo.delete_user.return_value = False
     
-    result = service.delete_user_by_id("uid-inexistente")
-    
-    mock_repo.delete_user.assert_called_once_with("uid-inexistente")
-    assert result is False
+    try:
+        result = service.delete_user_by_id("uid-inexistente")
+        
+        mock_repo.delete_user.assert_called_once_with("uid-inexistente")
+        assert False
+    except UserNotFoundException:
+        assert True
