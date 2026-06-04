@@ -37,13 +37,7 @@ async def update_user_information(user_info: UserSignupRequest, decoded_token: T
     dependencies=[Depends(verify_token)]
 )
 async def delete_user_by_uid(id: str):
-    if not service.delete_user_by_id(id):
-        return HTTPResponse(
-            status=400,
-            body={
-                "message": f"Não foi possível excluir usuário de id: {id}"
-            }
-        )
+    service.delete_user_by_id(id)
     
     return HTTPResponse(
         status=200, 

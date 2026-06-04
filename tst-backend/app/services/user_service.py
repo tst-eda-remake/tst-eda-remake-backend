@@ -40,7 +40,8 @@ def update_user(uid: str, user_info: UserSignupRequest):
     return UserResponse.model_validate(user)
 
 def delete_user_by_id(uid: str):
-    return user_repository.delete_user(uid)
+    if not user_repository.delete_user(uid):
+        raise UserNotFoundException(identifier=uid)
         
 
     

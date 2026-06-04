@@ -2,18 +2,22 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from app.models.user_model import User
+from app.models.question_model import Question
+from app.models.test_model import Test
+
 from app.models.config.database_config import Base
 from app.models.repositories.user_repository import UserRepository
-from app.models.user_model import User
 from app.schemas.auth_schemas import UserSignupRequest, TokenProviderData
 
-# Criamos a engine e a sessão fora para não recriar a engine toda vez
-TEST_DATABASE_URL = "sqlite:///:memory:"
-test_engine = create_engine(TEST_DATABASE_URL, connect_args={"check_same_thread": False})
-TestSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=test_engine)
 
 @pytest.fixture(scope="function")
 def set_up_test_db():
+    # Criamos a engine e a sessão fora para não recriar a engine toda vez
+    TEST_DATABASE_URL = "sqlite:///:memory:"
+    test_engine = create_engine(TEST_DATABASE_URL, connect_args={"check_same_thread": False})
+    TestSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=test_engine)
+
     # 1. Cria as tabelas no banco em memória antes do teste rodar
     Base.metadata.create_all(bind=test_engine)
     

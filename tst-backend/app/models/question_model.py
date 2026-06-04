@@ -8,7 +8,8 @@ class Question(Base):
 
     id: Mapped[int] = mapped_column(
         primary_key=True,
-        index=True
+        index=True, 
+        autoincrement=True
     )
 
     title: Mapped[str] = mapped_column(
@@ -42,11 +43,10 @@ class Question(Base):
         nullable=False
     )
     
-    # --- guinoronhaf: comentado porque é uma questão a ser implementada posteriormente ---
-    # test_cases: Mapped[list["Test"]] = relationship(
-    #     back_populates="question",
-    #     cascade="all, delete-orphan"
-    # )
+    test_cases: Mapped[list["Test"]] = relationship(
+        back_populates="question",
+        cascade="all, delete-orphan"
+    )
     
     def __init__(self, question_create: QuestionCreate):
         self.title = question_create.title

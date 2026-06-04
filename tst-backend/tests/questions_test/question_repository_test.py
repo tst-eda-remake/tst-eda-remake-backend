@@ -4,23 +4,26 @@ from sqlalchemy.orm import sessionmaker
 
 from app.models.config.database_config import Base
 from app.models.question_model import Question
-from app.schemas.question_schema import QuestionCreate
+from app.models.user_model import User
+from app.models.test_model import Test
 from app.models.repositories.question_repository import QuestionRepository
 
-TEST_DATABASE_URL = "sqlite:///:memory:"
-test_engine = create_engine(
-    TEST_DATABASE_URL,
-    connect_args={"check_same_thread": False}
-)
-
-TestSessionLocal = sessionmaker(
-    autocommit=False,
-    autoflush=False,
-    bind=test_engine
-)
+from app.schemas.question_schema import QuestionCreate
 
 @pytest.fixture(scope="function")
 def set_up_test_db():
+    TEST_DATABASE_URL = "sqlite:///:memory:"
+    test_engine = create_engine(
+        TEST_DATABASE_URL,
+        connect_args={"check_same_thread": False}
+    )
+
+    TestSessionLocal = sessionmaker(
+        autocommit=False,
+        autoflush=False,
+        bind=test_engine
+    )
+
     Base.metadata.create_all(bind=test_engine)
 
     db_test_session = TestSessionLocal()
@@ -58,7 +61,6 @@ def set_up_question_examples() -> dict[str, Question]:
     question_same_id.id = 1
 
     question_same_title = Question(QuestionCreate(
-        id=2,
         title="Two Sum",
         description="Outra descrição",
         restriction=None,
