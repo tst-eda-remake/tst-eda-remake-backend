@@ -9,6 +9,7 @@ from app.models.test_model import Test
 from app.models.repositories.question_repository import QuestionRepository
 
 from app.schemas.question_schema import QuestionCreate
+from app.enums.question_difficulty import QuestionDifficulty
 
 @pytest.fixture(scope="function")
 def set_up_test_db():
@@ -39,6 +40,7 @@ def set_up_test_db():
 def set_up_question_examples() -> dict[str, Question]:
     question = Question(QuestionCreate(
         title="Two Sum",
+        difficulty=QuestionDifficulty.FACIL,
         description="Encontre dois números cuja soma seja igual ao alvo.",
         restriction="1 <= n <= 10^5",
         input_format="Lista de inteiros",
@@ -51,6 +53,7 @@ def set_up_question_examples() -> dict[str, Question]:
 
     question_same_id = Question(QuestionCreate(
         title="Binary Search",
+        difficulty=QuestionDifficulty.MEDIA,
         description="Busca binária.",
         restriction="Lista ordenada",
         input_format="Lista + valor",
@@ -62,6 +65,7 @@ def set_up_question_examples() -> dict[str, Question]:
 
     question_same_title = Question(QuestionCreate(
         title="Two Sum",
+        difficulty=QuestionDifficulty.DIFICIL,
         description="Outra descrição",
         restriction=None,
         input_format="Entrada qualquer",
@@ -148,6 +152,7 @@ def test_data_persistence_question(set_up_test_db, set_up_question_examples):
     assert question_fetch is not None
     assert question_fetch.id == original.id
     assert question_fetch.title == original.title
+    assert question_fetch.difficulty == original.difficulty
     assert question_fetch.description == original.description
     assert question_fetch.restriction == original.restriction
     assert question_fetch.input_format == original.input_format

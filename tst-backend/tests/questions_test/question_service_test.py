@@ -8,6 +8,7 @@ from app.schemas.question_schema import (
 )
 from app.exceptions.question_exceptions import QuestionNotFoundException
 from app.models.question_model import Question
+from app.enums.question_difficulty import QuestionDifficulty
 
 import app.services.question_service as service
 
@@ -16,6 +17,7 @@ import app.services.question_service as service
 def real_question_create():
     return QuestionCreate(
         title="Questão Teste",
+        difficulty=QuestionDifficulty.INDETERMINADA,
         description="Descrição da questão",
         restriction="Nenhuma",
         input_format="txt",
@@ -44,6 +46,7 @@ def expected_question_response():
     return {
         "id": 1,
         "title": "Questão Teste",
+        "difficulty": "Indeterminada",
         "description": "Descrição da questão",
         "restriction": "Nenhuma",
         "input_format": "txt",
