@@ -58,16 +58,16 @@ def test_get_question_information_success(
     real_question_instance,
     expected_question_response
 ):
-    mock_repo.get_question_by_id.return_value = real_question_instance
+    mock_repo.find_by_id.return_value = real_question_instance
 
     with patch(
         "app.services.question_service.QuestionResponse.model_validate"
     ) as mock_validate:
         mock_validate.return_value = expected_question_response
 
-        result = service.get_question_information(1)
+        result = service.get_question_by_id(1)
 
-        mock_repo.get_question_by_id.assert_called_once_with(1)
+        mock_repo.find_by_id.assert_called_once_with(1)
         mock_validate.assert_called_once_with(real_question_instance)
 
         assert result == expected_question_response
@@ -75,12 +75,12 @@ def test_get_question_information_success(
 
 @patch("app.services.question_service.question_repository")
 def test_get_question_information_not_found(mock_repo):
-    mock_repo.get_question_by_id.return_value = None
+    mock_repo.find_by_id.return_value = None
 
     with pytest.raises(QuestionNotFoundException):
-        service.get_question_information(999)
+        service.get_question_by_id(999)
 
-    mock_repo.get_question_by_id.assert_called_once_with(999)
+    mock_repo.find_by_id.assert_called_once_with(999)
 
 
 @patch("app.services.question_service.question_repository")
@@ -94,7 +94,7 @@ def test_create_question_success(
     fake_question_instance = MagicMock()
 
     mock_question_class.return_value = fake_question_instance
-    mock_repo.insert_question.return_value = True
+    mock_repo.save.return_value = True
 
     with patch(
         "app.services.question_service.QuestionResponse.model_validate"
@@ -104,7 +104,7 @@ def test_create_question_success(
         result = service.create_question(real_question_create)
 
         mock_question_class.assert_called_once_with(real_question_create)
-        mock_repo.insert_question.assert_called_once_with(
+        mock_repo.save.assert_called_once_with(
             fake_question_instance
         )
 
@@ -121,14 +121,14 @@ def test_create_question_repository_fail(
     fake_question_instance = MagicMock()
 
     mock_question_class.return_value = fake_question_instance
-    mock_repo.insert_question.return_value = False
+    mock_repo.save.return_value = None
 
     result = service.create_question(real_question_create)
 
-    assert result is False
+    assert result is None
 
     mock_question_class.assert_called_once_with(real_question_create)
-    mock_repo.insert_question.assert_called_once_with(
+    mock_repo.save.assert_called_once_with(
         fake_question_instance
     )
 
@@ -141,7 +141,7 @@ def test_update_question_success(
 ):
     mock_question_instance = MagicMock()
 
-    mock_repo.get_question_by_id.return_value = mock_question_instance
+    mock_repo.find_by_id.return_value = mock_question_instance
     mock_repo.save_changes.return_value = True
 
     with patch(
@@ -154,7 +154,7 @@ def test_update_question_success(
             real_question_update
         )
 
-        mock_repo.get_question_by_id.assert_called_once_with(1)
+        mock_repo.find_by_id.assert_called_once_with(1)
 
         mock_question_instance.update.assert_called_once_with(
             real_question_update
@@ -174,7 +174,7 @@ def test_update_question_not_found(
     mock_repo,
     real_question_update
 ):
-    mock_repo.get_question_by_id.return_value = None
+    mock_repo.find_by_id.return_value = None
 
     with pytest.raises(QuestionNotFoundException):
         service.update_question(
@@ -182,7 +182,7 @@ def test_update_question_not_found(
             real_question_update
         )
 
-    mock_repo.get_question_by_id.assert_called_once_with(999)
+    mock_repo.find_by_id.assert_called_once_with(999)
     mock_repo.save_changes.assert_not_called()
 
 
@@ -193,7 +193,7 @@ def test_update_question_save_changes_fail(
 ):
     mock_question_instance = MagicMock()
 
-    mock_repo.get_question_by_id.return_value = mock_question_instance
+    mock_repo.find_by_id.return_value = mock_question_instance
     mock_repo.save_changes.return_value = False
 
     result = service.update_question(
@@ -203,7 +203,7 @@ def test_update_question_save_changes_fail(
 
     assert result is None
 
-    mock_repo.get_question_by_id.assert_called_once_with(1)
+    mock_repo.find_by_id.assert_called_once_with(1)
 
     mock_question_instance.update.assert_called_once_with(
         real_question_update
@@ -214,21 +214,21 @@ def test_update_question_save_changes_fail(
 
 @patch("app.services.question_service.question_repository")
 def test_delete_question_by_id_success(mock_repo):
-    mock_repo.delete_question.return_value = True
+    mock_repo.delete.return_value = True
 
     result = service.delete_question_by_id(1)
 
-    mock_repo.delete_question.assert_called_once_with(1)
+    mock_repo.delete.assert_called_once_with(1)
 
     assert result is True
 
 
 @patch("app.services.question_service.question_repository")
 def test_delete_question_by_id_not_found(mock_repo):
-    mock_repo.delete_question.return_value = False
+    mock_repo.delete.return_value = False
 
     result = service.delete_question_by_id(999)
 
-    mock_repo.delete_question.assert_called_once_with(999)
+    mock_repo.delete.assert_called_once_with(999)
 
     assert result is False
