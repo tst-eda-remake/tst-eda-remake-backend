@@ -27,6 +27,15 @@ async def get_question_information(id: int):
     return service.get_question_information(id)
 
 
+@router.post(
+    "/",
+    response_model=QuestionResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Cria nova questão."
+)
+async def create_question(question_data: QuestionCreate):
+    return service.create_question(question_data)
+
 @router.put(
     "/{id}",
     response_model=QuestionResponse,

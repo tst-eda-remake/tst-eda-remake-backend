@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class QuestionCreate(BaseModel):
     title: str
@@ -17,6 +17,8 @@ class QuestionUpdate(BaseModel):
     resolution_path: str | None = None
 
 class QuestionResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     title: str
     description: str

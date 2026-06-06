@@ -20,12 +20,14 @@ def get_question_by_id(id: int):
 
 
 def create_question(question_data: QuestionCreate):
-    question = Question(question_data)
+    new_question = Question(question_data)
 
-    if not question_repository.save(question):
-        return False # change for an exception later
+    saved_question = question_repository.save(new_question)
 
-    return QuestionResponse.model_validate(question)
+    if not saved_question:
+        return None
+
+    return QuestionResponse.model_validate(saved_question)
 
 
 def update_question(id: int, question_update: QuestionUpdate):
