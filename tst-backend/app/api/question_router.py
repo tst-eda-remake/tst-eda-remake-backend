@@ -8,6 +8,14 @@ router = APIRouter(
         tags=["question-endpoints"]
 )
 
+@router.get(
+    "/",
+    response_model=list[QuestionResponse],
+    summary="Lista todas as questões."
+)
+async def get_all_questions():
+    return service.get_all_questions()
+
 
 @router.get(
     "/{id}",

@@ -12,7 +12,12 @@ class QuestionRepository:
     def __init__(self, db: Optional[Session] = None):
         self.db = db if db is not None else session_local()
 
-    def get_by_id(self, id: int) -> Optional[Question]:
+    def find_all(self) -> list[Question]:
+        return self.db.query(
+            Question
+        ).all()
+
+    def find_by_id(self, id: int) -> Optional[Question]:
         return self.db.query(
             Question
         ).filter(Question.id == id).first()
