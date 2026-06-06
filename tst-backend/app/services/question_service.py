@@ -5,8 +5,8 @@ from app.models.repositories.question_repository import QuestionRepository
 
 question_repository = QuestionRepository()
 
-def get_question_information(id: int):
-    question = question_repository.get_question_by_id(id)
+def get_question(id: int):
+    question = question_repository.get_by_id(id)
 
     if not question:
         raise QuestionNotFoundException(identifier=id)
@@ -17,14 +17,14 @@ def get_question_information(id: int):
 def create_question(question_info: QuestionCreate):
     question = Question(question_info)
 
-    if not question_repository.insert_question(question):
+    if not question_repository.save(question):
         return False # change for an exception later
 
     return QuestionResponse.model_validate(question)
 
 
 def update_question(id: int, question_update: QuestionUpdate):
-    question = question_repository.get_question_by_id(id)
+    question = question_repository.get_by_id(id)
 
     if not question:
         raise QuestionNotFoundException(identifier=id)
@@ -38,4 +38,4 @@ def update_question(id: int, question_update: QuestionUpdate):
 
 
 def delete_question_by_id(id: int):
-    return question_repository.delete_question(id)
+    return question_repository.delete(id)

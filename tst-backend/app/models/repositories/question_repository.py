@@ -12,21 +12,21 @@ class QuestionRepository:
     def __init__(self, db: Optional[Session] = None):
         self.db = db if db is not None else session_local()
 
-    def get_question_by_id(self, id: int) -> Optional[Question]:
+    def get_by_id(self, id: int) -> Optional[Question]:
         return self.db.query(
             Question
         ).filter(Question.id == id).first()
 
-    def insert_question(self, question: Question):
+    def save(self, question: Question):
         try:
             self.db.add(question)
 
             self.db.commit()
             # self.db.refresh(question) --> garantir que o id seja preenchido
-            return True
+            return question
         except IntegrityError:
             self.db.rollback()
-            return False
+            return None
 
     def save_changes(self):
         try:
@@ -36,7 +36,7 @@ class QuestionRepository:
             self.db.rollback()
             return False
 
-    def delete_question(self, id: int):
+    def delete(self, id: int):
         try:
             lines = self.db.query(Question).filter(Question.id == id).delete(
                     synchronize_session="evaluate"
