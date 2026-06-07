@@ -22,6 +22,11 @@ class TopicRepository:
             Topic
         ).filter(Topic.id == id).first()
 
+    def find_by_ids(self, ids: list[int]) -> list[Topic]:
+        return self.db.query(
+            Topic
+        ).filter(Topic.id.in_(ids)).all()
+
     def find_by_name(self, name: str) -> list[Topic]:
         return self.db.query(
             Topic

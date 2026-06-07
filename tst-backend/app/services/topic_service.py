@@ -18,6 +18,11 @@ def get_topic_by_id(id: int):
 
     return TopicResponse.model_validate(topic)
 
+def get_topics_by_ids(ids: list[int]):
+    topics = topic_repository.find_by_ids(ids)
+    topics_response = list(map(TopicResponse.model_validate, topics))
+    return topics_response
+
 def get_topic_by_name(name: str):
     topics = topic_repository.find_by_name(name)
     topics_response = list(map(TopicResponse.model_validate, topics))
