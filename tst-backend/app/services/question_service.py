@@ -2,8 +2,13 @@ from app.schemas.question_schema import QuestionCreate, QuestionResponse, Questi
 from app.exceptions.question_exceptions import QuestionNotFoundException
 from app.models.question_model import Question
 from app.models.repositories.question_repository import QuestionRepository
+from app.models.repositories.topic_repository import TopicRepository
+from app.models.config.database_config import session_local
 
-question_repository = QuestionRepository()
+db = session_local()
+
+question_repository = QuestionRepository(db)
+topic_repository = TopicRepository(db)
 
 def get_all_questions():
     questions = question_repository.find_all()
@@ -21,6 +26,10 @@ def get_question_by_id(id: int):
 
 def create_question(question_data: QuestionCreate):
     new_question = Question(question_data)
+
+    topics = topic_repository.find_by_ids(question_data.topics)
+
+    new_question.topics = topics
 
     saved_question = question_repository.save(new_question)
 
