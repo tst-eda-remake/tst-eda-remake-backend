@@ -53,6 +53,12 @@ class Question(Base):
         back_populates="question",
         cascade="all, delete-orphan"
     )
+
+    topics = relationship(
+        "Topic",
+        secondary="question_topics",
+        back_populates="questions"
+    )
     
     def __init__(self, question_create: QuestionCreate):
         self.title = question_create.title

@@ -1,6 +1,6 @@
 from app.models.config.database_config import Base
 from sqlalchemy import String, Enum
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.schemas.topic_schemas import TopicCreate, TopicUpdate
 
@@ -17,6 +17,12 @@ class Topic(Base):
         String(100),
         unique=True,
         nullable=False
+    )
+
+    questions = relationship(
+        "Question",
+        secondary="question_topics",
+        back_populates="topics"
     )
 
     def __init__(self, topic_data: TopicCreate):
