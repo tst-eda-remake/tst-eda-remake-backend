@@ -12,6 +12,17 @@ from app.enums.question_difficulty import QuestionDifficulty
 
 import app.services.question_service as service
 
+from app.models.topic_model import Topic
+from app.schemas.topic_schemas import TopicCreate
+
+
+@pytest.fixture
+def real_topics():
+    topic_1 = Topic(TopicCreate(name="Inverte Pilha com Fila"))
+    topic_1.id = 1
+    topic_2 = Topic(TopicCreate(name="Inverte Fila com Pilha"))
+    topic_2.id = 2
+    return [topic_1, topic_2]
 
 @pytest.fixture
 def real_question_create():
@@ -22,7 +33,8 @@ def real_question_create():
         restriction="Nenhuma",
         input_format="txt",
         output_format="json",
-        resolution_path="/tmp/resolution"
+        resolution_path="/tmp/resolution",
+        topics=[1, 2]
     )
 
 
@@ -86,54 +98,111 @@ def test_get_question_information_not_found(mock_repo):
     mock_repo.find_by_id.assert_called_once_with(999)
 
 
+@patch("app.services.question_service.topic_repository")
 @patch("app.services.question_service.question_repository")
 @patch("app.services.question_service.Question")
 def test_create_question_success(
     mock_question_class,
-    mock_repo,
+    mock_question_repo,
+    mock_topic_repo,
     real_question_create,
+    real_topics,
     expected_question_response
 ):
+
     fake_question_instance = MagicMock()
 
     mock_question_class.return_value = fake_question_instance
-    mock_repo.save.return_value = True
+
+    mock_topic_repo.find_by_ids.return_value = real_topics
+
+    mock_question_repo.save.return_value = fake_question_instance
+
 
     with patch(
         "app.services.question_service.QuestionResponse.model_validate"
     ) as mock_validate:
+
         mock_validate.return_value = expected_question_response
 
-        result = service.create_question(real_question_create)
-
-        mock_question_class.assert_called_once_with(real_question_create)
-        mock_repo.save.assert_called_once_with(
-            fake_question_instance
+        result = service.create_question(
+            real_question_create
         )
 
-        assert result == expected_question_response
 
+    mock_topic_repo.find_by_ids.assert_called_once_with(
+        {1, 2}
+    )
 
-@patch("app.services.question_service.question_repository")
-@patch("app.services.question_service.Question")
-def test_create_question_repository_fail(
-    mock_question_class,
-    mock_repo,
-    real_question_create
-):
-    fake_question_instance = MagicMock()
+    assert fake_question_instance.topics == real_topics
 
-    mock_question_class.return_value = fake_question_instance
-    mock_repo.save.return_value = None
-
-    result = service.create_question(real_question_create)
-
-    assert result is None
-
-    mock_question_class.assert_called_once_with(real_question_create)
-    mock_repo.save.assert_called_once_with(
+    mock_question_repo.save.assert_called_once_with(
         fake_question_instance
     )
+
+    assert result == expected_question_response
+
+
+from app.exceptions.topic_exceptions import TopicNotFoundException
+
+
+@patch("app.services.question_service.topic_repository")
+@patch("app.services.question_service.question_repository")
+@patch("app.services.question_service.Question")
+def test_create_question_invalid_topic(
+    mock_question_class,
+    mock_question_repo,
+    mock_topic_repo,
+    real_question_create,
+    real_topics
+):
+
+    fake_question_instance = MagicMock()
+
+    mock_question_repo.save.return_value = fake_question_instance
+
+    mock_topic_repo.find_by_ids.return_value = [
+        real_topics[0]
+    ]
+
+    with pytest.raises(TopicNotFoundException):
+
+        service.create_question(
+            real_question_create
+        )
+
+
+    mock_question_repo.save.assert_not_called()
+
+
+from app.exceptions.topic_exceptions import TopicNotFoundException
+
+
+@patch("app.services.question_service.topic_repository")
+@patch("app.services.question_service.question_repository")
+@patch("app.services.question_service.Question")
+def test_create_question_invalid_topic(
+    mock_question_class,
+    mock_question_repo,
+    mock_topic_repo,
+    real_question_create,
+    real_topics
+):
+
+    mock_question_repo.save.return_value = True
+
+    mock_topic_repo.find_by_ids.return_value = [
+        real_topics[0]
+    ]
+
+    with pytest.raises(TopicNotFoundException):
+
+        service.create_question(
+            real_question_create
+        )
+
+
+    mock_question_repo.save.assert_not_called()
 
 
 @patch("app.services.question_service.question_repository")
