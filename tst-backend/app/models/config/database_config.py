@@ -25,6 +25,8 @@ def init_db():
     from app.models.user_model import User
     from app.models.question_model import Question 
     from app.models.test_model import Test
+    from app.models.topic_model import Topic
+    from app.models.question_topic_model import QuestionTopic
 
     print("🔨 Criando tabelas no banco de dados...")
     Base.metadata.create_all(bind=engine)

@@ -8,6 +8,14 @@ router = APIRouter(
         tags=["question-endpoints"]
 )
 
+@router.get(
+    "/",
+    response_model=list[QuestionResponse],
+    summary="Lista todas as questões."
+)
+async def get_all_questions():
+    return service.get_all_questions()
+
 
 @router.get(
     "/{id}",
@@ -18,6 +26,15 @@ router = APIRouter(
 async def get_question_information(id: int):
     return service.get_question_information(id)
 
+
+@router.post(
+    "/",
+    response_model=QuestionResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Cria nova questão."
+)
+async def create_question(question_data: QuestionCreate):
+    return service.create_question(question_data)
 
 @router.put(
     "/{id}",
