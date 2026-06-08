@@ -1,5 +1,6 @@
 from app.schemas.question_schema import QuestionCreate, QuestionResponse, QuestionUpdate
 from app.exceptions.question_exceptions import QuestionNotFoundException
+from app.exceptions.topic_exceptions import TopicNotFoundException
 from app.models.question_model import Question
 from app.models.repositories.question_repository import QuestionRepository
 from app.models.repositories.topic_repository import TopicRepository
@@ -25,7 +26,16 @@ def get_question_by_id(id: int):
 def create_question(question_data: QuestionCreate):
     new_question = Question(question_data)
 
-    topics = topic_repository.find_by_ids(question_data.topics)
+    requested_ids = set(question_data.topics)
+
+    topics = topic_repository.find_by_ids(requested_ids)
+
+    found_ids = {topic.id for topic in topics}
+
+    invalid_ids = requested_ids - found_ids
+
+    if invalid_ids:
+        raise TopicNotFoundException(identifier=list(invalid_ids))
 
     new_question.topics = topics
 

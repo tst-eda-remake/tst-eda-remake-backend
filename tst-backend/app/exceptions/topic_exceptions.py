@@ -9,6 +9,6 @@ class TopicNotFoundException(Exception):
     def __init__(self, identifier: list[int], search_field: str = "id"):
         self.identifier = identifier
         self.search_field = search_field
-        self.message f"Tópico(s) de {search_field} {identifier} não encontrado(s)"
+        self.message = f"Tópico(s) de {search_field} {identifier} não encontrado(s)"
 
         super().__init__(self.message)

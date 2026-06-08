@@ -22,7 +22,7 @@ class TopicRepository:
             Topic
         ).filter(Topic.id == id).first()
 
-    def find_by_ids(self, ids: list[int]) -> list[Topic]:
+    def find_by_ids(self, ids: set[int]) -> list[Topic]:
         return self.db.query(
             Topic
         ).filter(Topic.id.in_(ids)).all()
