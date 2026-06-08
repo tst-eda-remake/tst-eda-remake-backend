@@ -45,7 +45,8 @@ def set_up_question_examples() -> dict[str, Question]:
         restriction="1 <= n <= 10^5",
         input_format="Lista de inteiros",
         output_format="Índices dos elementos",
-        resolution_path="/solutions/two_sum.py"
+        resolution_path="/solutions/two_sum.py",
+        topics=[1, 2]
     ))
     
     # guinoronhaf: setando id aqui porque o model Question não recebe o id no construtor, já que o bd incrementa isso
@@ -58,7 +59,8 @@ def set_up_question_examples() -> dict[str, Question]:
         restriction="Lista ordenada",
         input_format="Lista + valor",
         output_format="Posição",
-        resolution_path="/solutions/binary_search.py"
+        resolution_path="/solutions/binary_search.py",
+        topics=[1, 2]
     ))
 
     question_same_id.id = 1
@@ -70,7 +72,8 @@ def set_up_question_examples() -> dict[str, Question]:
         restriction=None,
         input_format="Entrada qualquer",
         output_format="Saída qualquer",
-        resolution_path="/solutions/other.py"
+        resolution_path="/solutions/other.py",
+        topics=[1, 2]
     ))
 
     question_same_title.id = 2

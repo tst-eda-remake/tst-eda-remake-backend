@@ -3,6 +3,8 @@ from sqlalchemy import String, Enum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.schemas.topic_schemas import TopicCreate, TopicUpdate
+from app.models.question_model import Question
+from app.models.question_topic_model import QuestionTopic
 
 class Topic(Base):
     __tablename__ = "topics"
@@ -19,9 +21,8 @@ class Topic(Base):
         nullable=False
     )
 
-    questions = relationship(
-        "Question",
-        secondary="question_topics",
+    questions: Mapped[list[Question]] = relationship(
+        secondary=QuestionTopic.__table__,
         back_populates="topics"
     )
 
