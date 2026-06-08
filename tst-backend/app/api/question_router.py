@@ -24,7 +24,7 @@ async def get_all_questions():
     summary="Busca informações da questão."
 )
 async def get_question_information(id: int):
-    return service.get_question_information(id)
+    return service.get_question_by_id(id)
 
 
 @router.post(
