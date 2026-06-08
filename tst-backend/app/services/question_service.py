@@ -5,10 +5,8 @@ from app.models.repositories.question_repository import QuestionRepository
 from app.models.repositories.topic_repository import TopicRepository
 from app.models.config.database_config import session_local
 
-db = session_local()
-
-question_repository = QuestionRepository(db)
-topic_repository = TopicRepository(db)
+question_repository = QuestionRepository()
+topic_repository = TopicRepository(question_repository.db) # mesma sessão do question_repository
 
 def get_all_questions():
     questions = question_repository.find_all()
