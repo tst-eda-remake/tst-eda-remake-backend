@@ -2,7 +2,6 @@ from typing import Optional
 from httpx import delete
 from psycopg import IntegrityError
 from sqlalchemy.orm import Session
-from app.exceptions.test_exception_handler import TestNotFoundException
 from app.models.config.database_config import session_local
 from app.models.test_model import Test
 

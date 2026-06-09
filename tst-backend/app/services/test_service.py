@@ -1,4 +1,4 @@
-from app.exceptions.test_exception_handler import TestNotFoundException
+from app.exceptions.test_exception import TestNotFoundException
 from app.schemas.test_schemas import TestCreate, TestResponse, TestUpdate
 from app.models.repositories.test_repository import TestRepository
 from app.models.test_model import Test
