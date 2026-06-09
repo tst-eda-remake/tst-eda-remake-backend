@@ -11,3 +11,8 @@ class TestCreate(BaseModel):
     output: str
     is_public: bool
     question_id: int
+
+class TestUpdate(BaseModel):
+    input: str
+    output: str
+    is_public: bool
