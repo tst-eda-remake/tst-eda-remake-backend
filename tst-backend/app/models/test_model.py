@@ -33,7 +33,7 @@ class Test(Base):
 
     # isso indica que é mapeado para apenas um Obejeto Question (1 (Question) -> N (tests))
     question: Mapped["Question"] = relationship(
-        back_populates="test_cases" # esse parametro relaciona com o nome do atributo no model Question
+        back_populates="tests" # esse parametro relaciona com o nome do atributo no model Question
     )
 
     def __init__(self, test_create: TestCreate):
