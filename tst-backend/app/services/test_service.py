@@ -5,15 +5,6 @@ from app.models.test_model import Test
 
 repository = TestRepository()
 
-def get_public_questions_test(id_question: int):
-    return list(map(TestResponse.model_validate, repository.find_all_public_test_question(id_question)))
-
-def get_private_questions_test(id_question: int):
-    return list(map(TestResponse.model_validate, repository.find_all_private_test_question(id_question)))
-
-def get_all_questions_test(id_question: int):
-    return list(map(TestResponse.model_validate, repository.find_all_test_question(id_question)))
-
 def save_test(test_request: TestCreate):
     test_to_save = Test(test_request)
     

@@ -44,18 +44,3 @@ class TestRepository:
              Test
             ).filter(Test.id == id).first()
     
-    def find_all_test_question(self, id_question: int):
-        return self.db.query(
-            Test
-        ).filter(Test.question_id == id_question).all()
-    
-    def find_all_public_test_question(self, id_question: int):
-        return self.db.query(
-            Test
-        ).filter(Test.question_id == id_question and Test.is_public).all()
-    
-    def find_all_private_test_question(self, id_question: int):
-        return self.db.query(
-            Test
-        ).filter(Test.question_id == id_question and Test.is_public == False).all()
-    
