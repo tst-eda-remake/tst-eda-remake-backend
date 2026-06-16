@@ -1,21 +1,46 @@
 services:
   postgres: 
-    image: bitnami/postgresql:latest
-
-    container_name: postgres_db
-
+    image: postgres:latest
+    container_name: postgres
     ports:
       - '5432:5432'
-
     environment:
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-root}
       - POSTGRES_DB=${POSTGRES_DB:-my_database}
     volumes:
-      - polls_pg_data:/bitnami/postgresql
+      # CORREÇÃO: Caminho atualizado para a imagem oficial do Postgres
+      - polls_pg_data:/var/lib/postgresql
+
+    healthcheck:
+      # CORREÇÃO: Passando o usuário dinamicamente para evitar falhas se mudar o .env
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-my_database}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app_network
 
   fastapi:
-    
+    build: .
+    container_name: "fastapi_app"
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - ${PATH_SECURITY_CREDENTIALS_DIR}:/root/.SecurityInformations 
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-root}@postgres:5432/${POSTGRES_DB:-my_database}
+      - PATH_FIREBASE_CREDENTIALS=${PATH_FIREBASE_CREDENTIALS}    
+    depends_on:
+      postgres:
+        condition: "service_healthy"
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
     
 volumes:
   polls_pg_data:

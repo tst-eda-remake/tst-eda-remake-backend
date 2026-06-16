@@ -5,10 +5,7 @@ from app.core.settings import settings
 
 # gerenciador de conexão: cuida do login e mantem o canal fisico aberto 
 engine = create_engine(
-    settings.DATABASE_URL, # type: ignore
-    connect_args={
-        "options": '-c search_path="tst-eda-remake-db"'
-    }
+    settings.DATABASE_URL # type: ignore
 )
 
 # session local é uma fabrica de sessões -> criar sessions (add, commit, close).
