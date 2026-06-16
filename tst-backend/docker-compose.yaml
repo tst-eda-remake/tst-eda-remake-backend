@@ -21,6 +21,25 @@ services:
     networks:
       - app_network
 
+  firebase_emulator:
+    image: andreysenov/firebase-tools:latest
+    container_name: firebase_emulator
+    ports:
+      - "4000:4000"
+      - "9099:9099"
+      - "8080:8080"
+      - "9199:9199"
+    volumes:
+      - .:/home/node/app
+      - ${PATH_SECURITY_CREDENTIALS_DIR}:/home/node/SecurityInformations
+    working_dir: /home/node/app
+    environment:
+      - FIREBASE_TOKEN=token_falso_para_evitar_o_aviso
+    # Removida a flag --host inválida
+    command: firebase emulators:start --project=demo-local --config=/home/node/SecurityInformations/firebase.json --import=/home/node/app/firebase_data --export-on-exit
+    networks:
+      - app_network
+
   fastapi:
     build: .
     container_name: "fastapi_app"
@@ -37,6 +56,8 @@ services:
         condition: "service_healthy"
     networks:
       - app_network
+
+    command: uv run fastapi dev app/main.py --host 0.0.0.0 --port 8000
 
 networks:
   app_network:

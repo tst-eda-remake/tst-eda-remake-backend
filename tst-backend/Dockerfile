@@ -1,23 +1,24 @@
-# Usa uma imagem oficial do Python leve
 FROM python:3.11-slim
 
-# Instala o 'uv' de dentro do container usando o instalador oficial da Astral
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-# Define a pasta de trabalho dentro do container
+# Silencia o aviso de links do uv (já que em containers usamos cópia)
+ENV UV_LINK_MODE=copy
+# Garante que o Python encontre o pacote 'app' na raiz
+ENV PYTHONPATH=/app
+
 WORKDIR /app
 
-# Copia os arquivos de configuração primeiro (otimiza o cache do Docker)
-COPY pyproject.toml ./
+# Copia as definições de dependências primeiro
+COPY pyproject.toml uv.lock ./
 
-# O uv sincroniza e instala as dependências listadas no pyproject.toml
-RUN uv pip install --system -r pyproject.toml
+# Instala as dependências de forma otimizada
+RUN uv sync --frozen --no-install-project
 
-# Copia o restante do código do projeto para dentro do container
+# Copia o resto do código do projeto
 COPY . .
 
-# Expõe a porta que o FastAPI vai rodar
 EXPOSE 8000
 
-# Comando para iniciar o servidor usando o uv run
-CMD ["uv", "run", "fastapi", "dev", "--host", "0.0.0.0", "--port", "8000"]
+# CORREÇÃO: Alinhado com o ponto de entrada correto (app/main.py)
+CMD ["uv", "run", "fastapi", "dev", "app/main.py", "--host", "0.0.0.0", "--port", "8000"]
