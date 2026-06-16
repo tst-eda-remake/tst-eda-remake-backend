@@ -21,6 +21,10 @@ testpaths = ["tests"]
 [tool.uv]
 package = true
 
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+
 [dependency-groups]
 dev = [
     "pytest>=9.0.3",
