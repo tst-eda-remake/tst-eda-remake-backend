@@ -1,0 +1,21 @@
+services:
+  postgres: 
+    image: bitnami/postgresql:latest
+
+    container_name: postgres_db
+
+    ports:
+      - '5432:5432'
+
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-root}
+      - POSTGRES_DB=${POSTGRES_DB:-my_database}
+    volumes:
+      - polls_pg_data:/bitnami/postgresql
+
+  fastapi:
+    
+    
+volumes:
+  polls_pg_data:
