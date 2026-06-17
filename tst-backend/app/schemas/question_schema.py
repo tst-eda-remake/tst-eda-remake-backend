@@ -2,6 +2,7 @@ from pydantic import BaseModel, ConfigDict
 
 from app.enums.question_difficulty import QuestionDifficulty
 from app.schemas.topic_schemas import TopicResponse
+from app.schemas.test_schemas import TestResponse
 
 class QuestionCreate(BaseModel):
     title: str
@@ -20,7 +21,6 @@ class QuestionUpdate(BaseModel):
     restriction: str | None = None
     input_format: str | None = None
     output_format: str | None = None
-    resolution_path: str | None = None
     # topics: list[int] | None = None
 
 class QuestionResponse(BaseModel):
@@ -33,5 +33,9 @@ class QuestionResponse(BaseModel):
     restriction: str | None
     input_format: str
     output_format: str
-    resolution_path: str
     topics: list[TopicResponse]
+    tests: list[TestResponse]
+
+    def filter_test_public(self):
+        self.tests = [test for test in self.tests if test.is_public]
+        return self

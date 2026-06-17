@@ -12,6 +12,8 @@ topic_repository = TopicRepository(question_repository.db) # mesma sessão do qu
 def get_all_questions():
     questions = question_repository.find_all()
     questions_response = list(map(QuestionResponse.model_validate, questions))
+    questions_response = [question.filter_test_public() for question in questions_response]
+
     return questions_response
 
 def get_question_by_id(id: int):
@@ -20,7 +22,7 @@ def get_question_by_id(id: int):
     if not question:
         raise QuestionNotFoundException(identifier=id)
 
-    return QuestionResponse.model_validate(question)
+    return QuestionResponse.model_validate(question).filter_test_public()
 
 
 def create_question(question_data: QuestionCreate):
@@ -44,7 +46,7 @@ def create_question(question_data: QuestionCreate):
     if not saved_question:
         return None
 
-    return QuestionResponse.model_validate(saved_question)
+    return QuestionResponse.model_validate(saved_question).filter_test_public()
 
 
 def update_question(id: int, question_update: QuestionUpdate):
@@ -58,7 +60,7 @@ def update_question(id: int, question_update: QuestionUpdate):
     if not question_repository.save_changes():
         return None # change for an exception later
 
-    return QuestionResponse.model_validate(question)
+    return QuestionResponse.model_validate(question).filter_test_public()
 
 
 def delete_question_by_id(id: int):

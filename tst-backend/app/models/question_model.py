@@ -50,7 +50,7 @@ class Question(Base):
         nullable=False
     )
     
-    test_cases: Mapped[list["Test"]] = relationship(
+    tests: Mapped[list["Test"]] = relationship(
         back_populates="question",
         cascade="all, delete-orphan"
     )
