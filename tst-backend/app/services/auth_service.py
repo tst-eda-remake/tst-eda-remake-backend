@@ -6,9 +6,6 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.core.settings import settings
 from app.schemas.auth_schemas import TokenProviderData
 
-os.environ["FIREBASE_AUTH_EMULATOR_HOST"] = "localhost:9099" # isso indica ao firebase que é para utilizar o emulador
-# qaundo o codigo estiver em produção essa linha não deve existir ou deve ter uma codicional evitando-a.
-
 firebase_credentials_path = os.path.expanduser(settings.PATH_FIREBASE_CREDENTIALS)
 
 # Valida as configurações do SDK

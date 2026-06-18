@@ -31,9 +31,10 @@ services:
       - ./config/firebase:/home/node/config/firebase
     working_dir: /home/node/app
     environment:
+      - FIREBASE_AUTH_EMULATOR_HOST=localhost:9099
       - FIREBASE_TOKEN=token_falso_para_evitar_o_aviso
     
-    command: firebase emulators:start --project=demo-local --config=/home/node/config/firebase/firebase.json
+    command: firebase emulators:start --project=tst-eda-remake-demo --only auth --config=/home/node/config/firebase/firebase.json
     networks:
       - app_network
 
@@ -48,6 +49,7 @@ services:
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-root}@postgres:5432/${POSTGRES_DB:-my_database}
       - PATH_FIREBASE_CREDENTIALS=${PATH_FIREBASE_CREDENTIALS}    
+      - FIREBASE_AUTH_EMULATOR_HOST=firebase_emulator:9099
     depends_on:
       postgres:
         condition: "service_healthy"
