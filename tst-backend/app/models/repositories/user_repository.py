@@ -1,6 +1,4 @@
-from typing import Optional, final
-
-from sqlalchemy import delete
+from typing import Optional
 from sqlalchemy.exc import IntegrityError
 
 from app.models.config.database_config import session_local
@@ -22,6 +20,8 @@ class UserRepository:
             self.db.add(user)
 
             self.db.commit()
+
+            self.db.refresh(user)
             return True
         except IntegrityError:
             self.db.rollback()
