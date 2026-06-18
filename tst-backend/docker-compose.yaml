@@ -1,7 +1,7 @@
 services:
   postgres: 
     image: postgres:latest
-    container_name: postgres
+
     ports:
       - '5432:5432'
     environment:
@@ -9,11 +9,9 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-root}
       - POSTGRES_DB=${POSTGRES_DB:-my_database}
     volumes:
-      # CORREÇÃO: Caminho atualizado para a imagem oficial do Postgres
       - polls_pg_data:/var/lib/postgresql
 
     healthcheck:
-      # CORREÇÃO: Passando o usuário dinamicamente para evitar falhas se mudar o .env
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-my_database}"]
       interval: 5s
       timeout: 5s
@@ -23,31 +21,30 @@ services:
 
   firebase_emulator:
     image: andreysenov/firebase-tools:latest
-    container_name: firebase_emulator
+
     ports:
       - "4000:4000"
       - "9099:9099"
       - "8080:8080"
       - "9199:9199"
     volumes:
-      - .:/home/node/app
-      - ${PATH_SECURITY_CREDENTIALS_DIR}:/home/node/SecurityInformations
+      - ./config/firebase:/home/node/config/firebase
     working_dir: /home/node/app
     environment:
       - FIREBASE_TOKEN=token_falso_para_evitar_o_aviso
-    # Removida a flag --host inválida
-    command: firebase emulators:start --project=demo-local --config=/home/node/SecurityInformations/firebase.json --import=/home/node/app/firebase_data --export-on-exit
+    
+    command: firebase emulators:start --project=demo-local --config=/home/node/config/firebase/firebase.json
     networks:
       - app_network
 
   fastapi:
     build: .
-    container_name: "fastapi_app"
+
     ports:
       - "8000:8000"
     volumes:
       - .:/app
-      - ${PATH_SECURITY_CREDENTIALS_DIR}:/root/.SecurityInformations 
+      - ./config/firebase:/home/node/config/firebase 
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-root}@postgres:5432/${POSTGRES_DB:-my_database}
       - PATH_FIREBASE_CREDENTIALS=${PATH_FIREBASE_CREDENTIALS}    
