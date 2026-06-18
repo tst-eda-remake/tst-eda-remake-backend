@@ -19,7 +19,7 @@ pythonpath = ["."]
 testpaths = ["tests"]
 
 [tool.uv]
-package = true
+package = false
 
 [tool.pyright]
 venvPath = "."

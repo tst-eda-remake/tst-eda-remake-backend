@@ -1,0 +1,64 @@
+services:
+  postgres: 
+    image: postgres:latest
+
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-root}
+      - POSTGRES_DB=${POSTGRES_DB:-my_database}
+    volumes:
+      - polls_pg_data:/var/lib/postgresql
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-my_database}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app_network
+
+  firebase_emulator:
+    image: andreysenov/firebase-tools:latest
+
+    ports:
+      - "4000:4000"
+      - "9099:9099"
+      - "8080:8080"
+      - "9199:9199"
+    volumes:
+      - ./config/firebase:/home/node/config/firebase
+    working_dir: /home/node/app
+    environment:
+      - FIREBASE_TOKEN=token_falso_para_evitar_o_aviso
+    
+    command: firebase emulators:start --project=demo-local --config=/home/node/config/firebase/firebase.json
+    networks:
+      - app_network
+
+  fastapi:
+    build: .
+
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - ./config/firebase:/home/node/config/firebase 
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-root}@postgres:5432/${POSTGRES_DB:-my_database}
+      - PATH_FIREBASE_CREDENTIALS=${PATH_FIREBASE_CREDENTIALS}    
+    depends_on:
+      postgres:
+        condition: "service_healthy"
+    networks:
+      - app_network
+
+    command: uv run fastapi dev app/main.py --host 0.0.0.0 --port 8000
+
+networks:
+  app_network:
+    driver: bridge
+    
+volumes:
+  polls_pg_data:
