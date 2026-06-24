@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 
 from app.schemas.auth_schemas import TokenProviderData, UserSignupRequest
 from app.schemas.user_schema import UserResponse
-from app.exceptions.user_exceptions import UserNotFoundException
+from app.exceptions.user_exceptions import UserAlredyExistsException, UserNotFoundException
 from app.models.user_model import User
 
 import app.services.user_service as service
@@ -100,9 +100,10 @@ def test_signup_user_repository_fail(mock_user_class, mock_repo, real_token_data
     mock_user_class.return_value = fake_user_instance
     mock_repo.insert_user.return_value = False
     
-    result = service.singup_user(real_token_data, real_user_signup_request)
+    with pytest.raises(UserAlredyExistsException) as exc_info:
+        service.singup_user(real_token_data, real_user_signup_request)
     
-    assert result is False
+    assert exc_info.value.message ==  f"Usuário ja existe com email: {fake_user_instance.email}"
     mock_user_class.assert_called_once_with(real_user_signup_request, token_data=real_token_data)
     mock_repo.insert_user.assert_called_once_with(fake_user_instance)
 

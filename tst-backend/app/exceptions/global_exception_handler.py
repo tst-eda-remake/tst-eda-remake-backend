@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 from app.exceptions.question_exceptions import QuestionNotFoundException
-from app.exceptions.user_exceptions import UserNotFoundException
+from app.exceptions.user_exceptions import UserAlredyExistsException, UserNotFoundException
 from app.exceptions.topic_exceptions import TopicNotFoundException
 from app.exceptions.test_exception import TestNotFoundException
 
@@ -26,6 +26,18 @@ def register_exception_handlers(app: FastAPI):
             content={
                 "title": "Invalid Request",
                 "status": status.HTTP_404_NOT_FOUND,
+                "detail": exc.message,
+                "instance": request.url.path
+            }
+        )
+    
+    @app.exception_handler(UserAlredyExistsException)
+    async def user_alredy_exists_handler(request: Request, exc: UserAlredyExistsException):
+        return JSONResponse(
+            status_code=status.HTTP_409_CONFLICT,
+            content={
+                "title": "Invalid Request",
+                "status": status.HTTP_409_CONFLICT,
                 "detail": exc.message,
                 "instance": request.url.path
             }

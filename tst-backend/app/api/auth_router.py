@@ -1,5 +1,5 @@
 from app.services.auth_service import verify_token
-from app.services.user_service import singup_user
+import app.services.user_service as service
 from fastapi import status, APIRouter, Depends
 from app.schemas.auth_schemas import UserSignupRequest, TokenProviderData
 from app.schemas.user_schema import UserResponse
@@ -33,7 +33,7 @@ async def signup(user_signup: UserSignupRequest, decoded_token: TokenProviderDat
         HTTPExecption (409): Se o usuário ja apresentar cadastro.
     """
     
-    return {
-        "status": 201,
-        "user_info": singup_user(user_info=user_signup, token_data=decoded_token)
-    }
+    return service.singup_user(
+        user_info=user_signup, 
+        token_data=decoded_token
+    )
