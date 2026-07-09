@@ -5,3 +5,9 @@ class QuestionNotFoundException(Exception):
         self.message = f"Questão não encontrada com o {search_field}: '{identifier}'"
 
         super().__init__(self.message)
+
+class QuestionCouldntPersistException(Exception):
+    def __init__(self):
+        self.message = f"Questão não conseguiu ser persistida"
+
+        super().__init__(self.message)

@@ -27,7 +27,8 @@ class QuestionRepository:
             self.db.add(question)
 
             self.db.commit()
-            # self.db.refresh(question) --> garantir que o id seja preenchido
+            self.db.refresh(question)
+            
             return question
         except IntegrityError:
             self.db.rollback()

@@ -34,6 +34,19 @@ class QuestionResponse(BaseModel):
     input_format: str
     output_format: str
     topics: list[TopicResponse]
+
+    
+class QuestionResponseTests(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    difficulty: QuestionDifficulty
+    title: str
+    description: str
+    restriction: str | None
+    input_format: str
+    output_format: str
+    topics: list[TopicResponse]
     tests: list[TestResponse]
 
     def filter_test_public(self):
