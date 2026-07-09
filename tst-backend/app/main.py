@@ -1,11 +1,5 @@
 from fastapi import FastAPI
-from app.api import (
-    auth_router, 
-    user_router,
-    question_router,
-    topic_router,
-    test_router
-)
+from fastapi_pagination import add_pagination
 from contextlib import asynccontextmanager
 from app.models.config.database_config import init_db 
 from app.core.config_app import config_middleware_cors, include_routers
@@ -23,3 +17,4 @@ app = FastAPI(lifespan=lifespan)
 register_exception_handlers(app)
 config_middleware_cors(app)
 include_routers(app)
+add_pagination(app)

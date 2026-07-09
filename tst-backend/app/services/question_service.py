@@ -1,5 +1,7 @@
-from app.schemas.question_schema import QuestionCreate, QuestionResponse, QuestionUpdate
-from app.exceptions.question_exceptions import QuestionNotFoundException
+from ctypes.util import test
+
+from app.schemas.question_schema import QuestionCreate, QuestionResponse, QuestionResponseTests, QuestionUpdate
+from app.exceptions.question_exceptions import QuestionCouldntPersistException, QuestionNotFoundException
 from app.exceptions.topic_exceptions import TopicNotFoundException
 from app.models.question_model import Question
 from app.models.repositories.question_repository import QuestionRepository
@@ -9,20 +11,22 @@ from app.models.config.database_config import session_local
 question_repository = QuestionRepository()
 topic_repository = TopicRepository(question_repository.db) # mesma sessão do question_repository
 
-def get_all_questions():
+def get_all_questions(tests: bool):
     questions = question_repository.find_all()
-    questions_response = list(map(QuestionResponse.model_validate, questions))
-    questions_response = [question.filter_test_public() for question in questions_response]
+    
+    if tests:
+        questions_response = list(map(QuestionResponseTests.model_validate, questions))
+        return [question.filter_test_public() for question in questions_response]
+    
+    return list(map(QuestionResponse.model_validate, questions))
 
-    return questions_response
-
-def get_question_by_id(id: int):
+def get_question_by_id(id: int, tests: bool):
     question = question_repository.find_by_id(id)
 
     if not question:
         raise QuestionNotFoundException(identifier=id)
 
-    return QuestionResponse.model_validate(question).filter_test_public()
+    return QuestionResponseTests.model_validate(question).filter_test_public() if tests else QuestionResponse.model_validate(question)
 
 
 def create_question(question_data: QuestionCreate):
@@ -44,7 +48,7 @@ def create_question(question_data: QuestionCreate):
     saved_question = question_repository.save(new_question)
 
     if not saved_question:
-        return None
+        return QuestionCouldntPersistException()
 
     return QuestionResponse.model_validate(saved_question).filter_test_public()
 
@@ -58,7 +62,7 @@ def update_question(id: int, question_update: QuestionUpdate):
     question.update(question_update)
 
     if not question_repository.save_changes():
-        return None # change for an exception later
+        return QuestionCouldntPersistException() # change for an exception later
 
     return QuestionResponse.model_validate(question).filter_test_public()
 

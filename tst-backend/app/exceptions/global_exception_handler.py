@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
-from app.exceptions.question_exceptions import QuestionNotFoundException
+from app.exceptions.question_exceptions import QuestionCouldntPersistException, QuestionNotFoundException
 from app.exceptions.user_exceptions import UserAlredyExistsException, UserNotFoundException
 from app.exceptions.topic_exceptions import TopicNotFoundException
 from app.exceptions.test_exception import TestNotFoundException
@@ -62,6 +62,18 @@ def register_exception_handlers(app: FastAPI):
             content={
                 "title": "Invalid Request",
                 "status": status.HTTP_404_NOT_FOUND,
+                "detail": exc.message,
+                "instance": request.url.path
+            }
+        )
+    
+    @app.exception_handler(QuestionCouldntPersistException)
+    async def question_not_found_handler(request: Request, exc: QuestionCouldntPersistException):
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={
+                "title": "Invalid Request",
+                "status": status.HTTP_400_BAD_REQUEST,
                 "detail": exc.message,
                 "instance": request.url.path
             }
