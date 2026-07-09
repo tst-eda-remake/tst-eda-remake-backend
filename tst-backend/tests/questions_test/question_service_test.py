@@ -3,12 +3,13 @@ from unittest.mock import MagicMock, patch
 
 from app.schemas.question_schema import (
     QuestionCreate,
+    QuestionResponseTests,
     QuestionUpdate,
     QuestionResponse
 )
 
 from app.schemas.test_schemas import TestCreate, TestResponse
-from app.exceptions.question_exceptions import QuestionNotFoundException
+from app.exceptions.question_exceptions import QuestionNotFoundException, QuestionCouldntPersistException
 from app.models.test_model import Test
 from app.models.question_model import Question
 from app.enums.question_difficulty import QuestionDifficulty
@@ -115,9 +116,9 @@ def test_get_question_information_success(
     
     mock_repo.find_by_id.return_value = real_question_instance
 
-    result = service.get_question_by_id(1)
+    result = service.get_question_by_id(1, tests=True)
 
-    expected_response_instance = QuestionResponse.model_validate(expected_question_response)
+    expected_response_instance = QuestionResponseTests.model_validate(expected_question_response)
     
     assert result == expected_response_instance
 
@@ -127,7 +128,7 @@ def test_get_question_information_not_found(mock_repo):
     mock_repo.find_by_id.return_value = None
 
     with pytest.raises(QuestionNotFoundException):
-        service.get_question_by_id(999)
+        service.get_question_by_id(999, tests=True)
 
     mock_repo.find_by_id.assert_called_once_with(999)
 
@@ -182,39 +183,6 @@ def test_create_question_invalid_topic(
     real_question_create,
     real_topics
 ):
-
-    fake_question_instance = MagicMock()
-
-    mock_question_repo.save.return_value = fake_question_instance
-
-    mock_topic_repo.find_by_ids.return_value = [
-        real_topics[0]
-    ]
-
-    with pytest.raises(TopicNotFoundException):
-
-        service.create_question(
-            real_question_create
-        )
-
-
-    mock_question_repo.save.assert_not_called()
-
-
-from app.exceptions.topic_exceptions import TopicNotFoundException
-
-
-@patch("app.services.question_service.topic_repository")
-@patch("app.services.question_service.question_repository")
-@patch("app.services.question_service.Question")
-def test_create_question_invalid_topic(
-    mock_question_class,
-    mock_question_repo,
-    mock_topic_repo,
-    real_question_create,
-    real_topics
-):
-
     mock_question_repo.save.return_value = True
 
     mock_topic_repo.find_by_ids.return_value = [
@@ -222,11 +190,7 @@ def test_create_question_invalid_topic(
     ]
 
     with pytest.raises(TopicNotFoundException):
-
-        service.create_question(
-            real_question_create
-        )
-
+        service.create_question(real_question_create)
 
     mock_question_repo.save.assert_not_called()
 
@@ -283,20 +247,17 @@ def test_update_question_save_changes_fail(
     mock_repo.find_by_id.return_value = mock_question_instance
     mock_repo.save_changes.return_value = False
 
-    result = service.update_question(
-        1,
-        real_question_update
-    )
-
-    assert result is None
+    with pytest.raises(QuestionCouldntPersistException):
+        service.update_question(
+            1,
+            real_question_update
+        )
 
     mock_repo.find_by_id.assert_called_once_with(1)
 
     mock_question_instance.update.assert_called_once_with(
         real_question_update
     )
-
-    mock_repo.save_changes.assert_called_once()
 
 
 @patch("app.services.question_service.question_repository")

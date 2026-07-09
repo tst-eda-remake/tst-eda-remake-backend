@@ -48,9 +48,9 @@ def create_question(question_data: QuestionCreate):
     saved_question = question_repository.save(new_question)
 
     if not saved_question:
-        return QuestionCouldntPersistException()
+        raise QuestionCouldntPersistException()
 
-    return QuestionResponse.model_validate(saved_question).filter_test_public()
+    return QuestionResponse.model_validate(saved_question)
 
 
 def update_question(id: int, question_update: QuestionUpdate):
@@ -62,9 +62,9 @@ def update_question(id: int, question_update: QuestionUpdate):
     question.update(question_update)
 
     if not question_repository.save_changes():
-        return QuestionCouldntPersistException() # change for an exception later
+        raise QuestionCouldntPersistException() 
 
-    return QuestionResponse.model_validate(question).filter_test_public()
+    return QuestionResponse.model_validate(question)
 
 
 def delete_question_by_id(id: int):
