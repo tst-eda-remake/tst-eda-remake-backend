@@ -14,12 +14,12 @@ class Test(Base):
     )
 
     input: Mapped[str] = mapped_column(
-        String(256),
+        String(2056),
         nullable=False 
     )
 
     output: Mapped[str] = mapped_column(
-        String(256),
+        String(2056),
         nullable=False 
     )
 

@@ -20,33 +20,33 @@ class Question(Base):
     )
 
     title: Mapped[str] = mapped_column(
-        String(30),
+        String(50),
         unique=True,
         nullable=False,
         index=True
     )
 
     description: Mapped[str] = mapped_column(
-        String(1024),
+        String(5012),
         nullable=False
     )
 
     restriction: Mapped[str | None] = mapped_column(
-        String(512),
+        String(1024),
     )
 
     input_format: Mapped[str] = mapped_column(
-        String(512),
+        String(1024),
         nullable=False
     )
 
     output_format: Mapped[str] = mapped_column(
-        String(512),
+        String(1024),
         nullable=False
     )
 
     resolution_path: Mapped[str] = mapped_column(
-        String(256),
+        String(1024),
         nullable=False
     )
     
